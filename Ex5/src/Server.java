@@ -7,9 +7,14 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Server {
     public static List<ClientHandler> clients = new ArrayList<>();
+
+    //Thread pool
+    private static final ExecutorService pool = Executors.newFixedThreadPool(2);
 
     public static void main(String[] args) throws IOException {
         Properties prop = Config.load();
@@ -19,9 +24,10 @@ public class Server {
         while(true){
             Socket clientSocket = serverSocket.accept();
             System.out.println("New client :" + clientSocket);
-            ClientHandler clientHandler = new ClientHandler(clientSocket);
-            Thread thread = new Thread(clientHandler);
-            thread.start();
+            pool.execute(new ClientHandler(clientSocket));
+//            ClientHandler clientHandler = new ClientHandler(clientSocket);
+//            Thread thread = new Thread(clientHandler);
+//            thread.start();
         }
 
     }

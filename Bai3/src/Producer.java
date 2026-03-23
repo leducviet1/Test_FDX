@@ -7,7 +7,7 @@ public class Producer implements Runnable{
     public void run() {
         while(true){
             synchronized (message){
-                while(message.queue.size() > message.maxSize){
+                while(message.queue.size() >= message.maxSize){
                     try {
                         System.out.println("Queue is full , Producer is waiting");
                         message.wait();

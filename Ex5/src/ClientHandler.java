@@ -1,3 +1,5 @@
+import services.MessengerDAO;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -15,12 +17,15 @@ public class ClientHandler implements Runnable{
         this.clientSocket = clientSocket;
     }
     public void broadcast(String message){
-        for(ClientHandler clientHandler : Server.clients){
-            clientHandler.out.println(message);
+        synchronized (Server.clients){
+            for(ClientHandler clientHandler : Server.clients){
+                clientHandler.out.println(message);
+            }
         }
     }
     @Override
     public void run(){
+        MessengerDAO messengerDAO = new MessengerDAO();
        try{
            // Luồng vào ra từ socket
            this.in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
@@ -31,10 +36,24 @@ public class ClientHandler implements Runnable{
 
            String message;
            while((message = in.readLine()) != null){
-                broadcast(name + ": " + message);
+               messengerDAO.saveMessage(name,message);
+                broadcast(name + " : " + message);
+                if(message.equalsIgnoreCase("exit")){
+                    broadcast(name + " has left the chat!");
+                    break;
+                }
            }
        } catch (IOException e) {
            System.out.println("Lost Connection");
+       }finally{
+           try{
+               clientSocket.close();
+           } catch (IOException e) {
+               System.out.println("Lost Connection");
+           }synchronized (Server.clients){
+               Server.clients.remove(this);
+           }
+           broadcast(name + " has left the chat!");
        }
 
     }
