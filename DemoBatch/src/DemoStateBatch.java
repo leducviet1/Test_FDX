@@ -11,9 +11,9 @@ public class DemoStateBatch {
         return users;
     }
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        demoInsertWithoutBatch();
+//        demoInsertWithoutBatch();
         System.out.println("________________________________");
-        demoInsertWithBatch(500);
+        demoInsertWithBatch(200);
 
     }
     public static void demoInsertWithoutBatch() throws SQLException, ClassNotFoundException {
