@@ -3,11 +3,13 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Bai3/Bai3.iml" filepath="$PROJECT_DIR$/Bai3/Bai3.iml" />
+      <module fileurl="file://$PROJECT_DIR$/DemoBatch/DemoBatch.iml" filepath="$PROJECT_DIR$/DemoBatch/DemoBatch.iml" />
       <module fileurl="file://$PROJECT_DIR$/Ex1/Ex1.iml" filepath="$PROJECT_DIR$/Ex1/Ex1.iml" />
       <module fileurl="file://$PROJECT_DIR$/Ex2/Ex2.iml" filepath="$PROJECT_DIR$/Ex2/Ex2.iml" />
       <module fileurl="file://$PROJECT_DIR$/Ex3/Ex3.iml" filepath="$PROJECT_DIR$/Ex3/Ex3.iml" />
       <module fileurl="file://$PROJECT_DIR$/Ex4/Ex4.iml" filepath="$PROJECT_DIR$/Ex4/Ex4.iml" />
       <module fileurl="file://$PROJECT_DIR$/Ex5/Ex5.iml" filepath="$PROJECT_DIR$/Ex5/Ex5.iml" />
+      <module fileurl="file://$PROJECT_DIR$/OrderSystem/OrderSystem.iml" filepath="$PROJECT_DIR$/OrderSystem/OrderSystem.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/exercise.iml" filepath="$PROJECT_DIR$/.idea/exercise.iml" />
     </modules>
   </component>
