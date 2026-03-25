@@ -55,4 +55,7 @@ public class Order {
     public void setAddress(String address) {
         this.address = address;
     }
+    public String toLine() {
+        return orderId + "|" + orderName + "|" + customerName + "|" + address + "|" + price;
+    }
 }

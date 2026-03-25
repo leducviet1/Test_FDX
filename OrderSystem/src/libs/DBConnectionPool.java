@@ -7,19 +7,25 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 public class DBConnectionPool {
     private static ArrayBlockingQueue<Connection> pool;
+
     public DBConnectionPool(int size) throws SQLException {
         pool = new ArrayBlockingQueue<>(size);
-        for(int i = 0; i < size; i++){
+        for (int i = 0; i < size; i++) {
             Connection conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/test","root","Ldviet04@"
+                    "jdbc:mysql://localhost:3306/test", "root", "Ldviet04@"
             );
             pool.add(conn);
         }
     }
-    public static Connection getConnection() throws InterruptedException {
-        return pool.take();  //chờ nếu hết connection
+
+
+    public Connection getConnection() throws InterruptedException {
+        Connection realConn = pool.take();
+        return new PoolConnection(realConn, this);
+
     }
-    public static void releaseConnection(Connection conn) throws SQLException{
+
+    public  void releaseConnection(Connection conn) throws SQLException {
         pool.offer(conn);
     }
 
