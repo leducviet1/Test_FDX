@@ -11,11 +11,8 @@ public class StudentServiceImpl implements StudentService {
     }
     @Override
     @Transactional
-    public void delete(int id) throws SQLException, IllegalAccessException {
+    public void delete(int id) throws SQLException {
         crudRepo.delete(Student.class,id);
-        if (true) {
-            throw new RuntimeException("Lỗi khi delete!");
-        }
     }
 
 }

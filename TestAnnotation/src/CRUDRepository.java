@@ -74,7 +74,7 @@ public class CRUDRepository {
         Statement statement = connection.createStatement();
         statement.executeUpdate(SQL);
     }
-    public <T> void delete(Class<T> tClass , Object id) throws IllegalAccessException, SQLException {
+    public <T> void delete(Class<T> tClass , Object id) throws  SQLException {
         Entity entity = tClass.getAnnotation(Entity.class);
         String tableName = entity.tableName();
         String SQL =  "DELETE FROM " + tableName + " WHERE id=" + id;

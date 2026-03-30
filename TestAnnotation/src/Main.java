@@ -15,16 +15,16 @@ public class Main {
         // tạo proxy
         StudentService proxy = ProxyFactory.createProxy(studentService, dataSource);
 
-        Student s = new Student();
-        s.setId(5);
-        s.setName("Việt");
+//        Student s = new Student();
+//        s.setId(56);
+//        s.setName("Vũ");
+//
+//        proxy.create(s); // sẽ rollback
 
-        proxy.create(s); // sẽ rollback
-
-//        try {
-//            proxy.delete(10);
-//        } catch (Exception e) {
-//            System.out.println("Đã rollback delete");
-//        }
+        try {
+            proxy.delete(1);
+        } catch (Exception e) {
+            System.out.println("Đã rollback delete");
+        }
     }
 }
