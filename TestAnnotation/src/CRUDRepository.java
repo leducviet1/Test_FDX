@@ -8,10 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CRUDRepository {
-    private Connection connection;
-    public  CRUDRepository(Connection connection){
-        this.connection = connection;
-    }
+
+
     public <T> List<T> findAll(Class<T> tClass) throws SQLException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         List<T> list = new ArrayList<>();
 
@@ -21,6 +19,7 @@ public class CRUDRepository {
         Entity entity =  tClass.getAnnotation(Entity.class);
         String tableName = entity.tableName();
         String SQL =  "SELECT * FROM " + tableName + " LIMIT 100";
+        Connection connection = ConnectionHolder.getConnection();
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(SQL);
 
@@ -49,7 +48,7 @@ public class CRUDRepository {
         values.deleteCharAt(values.length() - 1);
         String SQL = "INSERT INTO " + tableName + " (" + columns + ") VALUES (" + values + ")";
         //insert into students(id,name) values ("4","a")
-
+        Connection connection = ConnectionHolder.getConnection();
         Statement statement = connection.createStatement();
         statement.executeUpdate(SQL);
     }
@@ -71,6 +70,7 @@ public class CRUDRepository {
         }
         columns.deleteCharAt(columns.length() - 1);
         String SQL = "UPDATE " + tableName + " SET " + columns + "='" + id + "' WHERE id=" + id;
+        Connection connection = ConnectionHolder.getConnection();
         Statement statement = connection.createStatement();
         statement.executeUpdate(SQL);
     }
@@ -78,6 +78,7 @@ public class CRUDRepository {
         Entity entity = tClass.getAnnotation(Entity.class);
         String tableName = entity.tableName();
         String SQL =  "DELETE FROM " + tableName + " WHERE id=" + id;
+        Connection connection = ConnectionHolder.getConnection();
         Statement statement = connection.createStatement();
         statement.executeUpdate(SQL);
     }
