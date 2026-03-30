@@ -10,6 +10,7 @@
       <module fileurl="file://$PROJECT_DIR$/Ex4/Ex4.iml" filepath="$PROJECT_DIR$/Ex4/Ex4.iml" />
       <module fileurl="file://$PROJECT_DIR$/Ex5/Ex5.iml" filepath="$PROJECT_DIR$/Ex5/Ex5.iml" />
       <module fileurl="file://$PROJECT_DIR$/OrderSystem/OrderSystem.iml" filepath="$PROJECT_DIR$/OrderSystem/OrderSystem.iml" />
+      <module fileurl="file://$PROJECT_DIR$/TestAnnotation/TestAnnotation.iml" filepath="$PROJECT_DIR$/TestAnnotation/TestAnnotation.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/exercise.iml" filepath="$PROJECT_DIR$/.idea/exercise.iml" />
     </modules>
   </component>
