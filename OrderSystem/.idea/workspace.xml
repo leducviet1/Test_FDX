@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="e760f236-78a4-4842-be1e-17e7aa197c9c" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/OrderSystem.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TestAnnotation/src/CRUDRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../TestAnnotation/src/CRUDRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TestAnnotation/src/ConnectionHolder.java" beforeDir="false" afterPath="$PROJECT_DIR$/../TestAnnotation/src/ConnectionHolder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TestAnnotation/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/../TestAnnotation/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TestAnnotation/src/StudentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../TestAnnotation/src/StudentService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TestAnnotation/src/StudentServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../TestAnnotation/src/StudentServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/TestAnnotation/Main.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/TestAnnotation/ProxyFactory.class" beforeDir="false" afterPath="$PROJECT_DIR$/../out/production/TestAnnotation/ProxyFactory.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/TestAnnotation/StudentService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../out/production/TestAnnotation/StudentService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/TestAnnotation/StudentServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/../out/production/TestAnnotation/StudentServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/TestAnnotation/TransactionProxy.class" beforeDir="false" afterPath="$PROJECT_DIR$/../out/production/TestAnnotation/TransactionProxy.class" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "leducviet1"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/leducviet1/Test_FDX.git",
+    "accountId": "332543de-8bc2-456e-b83c-2d2bec9bbdc7"
+  }
+}]]></component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 4
+}]]></component>
+  <component name="ProjectId" id="3BnFeWVvz6Ye9iuridKep2AXx8B" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "master",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "I:/intern/exercise/OrderSystem",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.23892.409" />
+        <option value="bundled-js-predefined-d6986cc7102b-e03c56caf84a-JavaScript-IU-252.23892.409" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="e760f236-78a4-4842-be1e-17e7aa197c9c" name="Changes" comment="" />
+      <created>1775117022602</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1775117022602</updated>
+      <workItem from="1775117024010" duration="17000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

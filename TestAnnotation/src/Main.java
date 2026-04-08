@@ -1,6 +1,7 @@
 import com.mysql.cj.jdbc.MysqlDataSource;
 
 import java.sql.*;
+import java.util.List;
 
 public class Main {
 
@@ -21,10 +22,14 @@ public class Main {
 //
 //        proxy.create(s); // sẽ rollback
 
-        try {
-            proxy.delete(1);
-        } catch (Exception e) {
-            System.out.println("Đã rollback delete");
+//        try {
+//            proxy.delete(1);
+//        } catch (Exception e) {
+//            System.out.println("Đã rollback delete");
+//        }
+        List<Student> studentList = proxy.findAll();
+        for (Student student : studentList) {
+            System.out.println(student.getName());
         }
     }
 }
