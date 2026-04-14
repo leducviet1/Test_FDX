@@ -1,7 +1,8 @@
-package com.example.librarymanage_be.service;
+package com.example.librarymanage_be.service.Impl;
 
 import com.example.librarymanage_be.entity.User;
 import com.example.librarymanage_be.repo.UserRepository;
+import com.example.librarymanage_be.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

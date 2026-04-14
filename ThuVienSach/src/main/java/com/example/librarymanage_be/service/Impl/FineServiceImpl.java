@@ -1,4 +1,4 @@
-package com.example.librarymanage_be.service;
+package com.example.librarymanage_be.service.Impl;
 
 import com.example.librarymanage_be.config.FineConfig;
 import com.example.librarymanage_be.dto.request.FineRequest;
@@ -9,6 +9,8 @@ import com.example.librarymanage_be.enums.FineStatus;
 import com.example.librarymanage_be.enums.FineType;
 import com.example.librarymanage_be.mapper.FineMapper;
 import com.example.librarymanage_be.repo.FineRepository;
+import com.example.librarymanage_be.service.BorrowDetailService;
+import com.example.librarymanage_be.service.FineService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
