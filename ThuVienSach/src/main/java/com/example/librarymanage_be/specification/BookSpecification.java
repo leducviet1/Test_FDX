@@ -10,7 +10,6 @@ import java.util.List;
 
 public class BookSpecification {
     public static Specification<Book> idIn(List<Integer> ids) {
-
         return (root, query, cb) -> root.get("bookId").in(ids);
     }
 
