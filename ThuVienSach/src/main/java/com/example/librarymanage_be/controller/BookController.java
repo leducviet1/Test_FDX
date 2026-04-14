@@ -51,13 +51,10 @@ public class BookController {
     public void delete(@PathVariable Integer id){
         bookService.delete(id);
     }
-    @GetMapping("/export")
 
-    public ExportResponse export(@RequestParam(defaultValue = "0") int page,
-                                 @RequestParam(defaultValue = "5") int size) throws IOException {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<BookResponse> books = bookService.getBooks(pageable);
-        String url = excelExportService.exportBooks(books);
+    @GetMapping("/export")
+    public ExportResponse export() throws  IOException  {
+        String url = excelExportService.exportBooks();
         return new ExportResponse(url,"Export successful");
     }
 }

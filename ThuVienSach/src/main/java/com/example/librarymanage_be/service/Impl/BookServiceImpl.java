@@ -206,7 +206,6 @@ public class BookServiceImpl implements BookService {
         for (int i = 0; i < ids.size(); i++) {
             orderMap.put(ids.get(i), i);
         }
-
         books.sort(Comparator.comparingInt(
                 b -> orderMap.getOrDefault(b.getBookId(), Integer.MAX_VALUE)
         ));
@@ -223,5 +222,4 @@ public class BookServiceImpl implements BookService {
                 esResult.getTotalElements()
         );
     }
-
 }

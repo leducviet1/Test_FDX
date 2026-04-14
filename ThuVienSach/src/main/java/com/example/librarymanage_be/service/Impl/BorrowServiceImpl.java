@@ -155,7 +155,7 @@ public class BorrowServiceImpl implements BorrowService {
     public Borrow findById(Integer borrowId) {
         log.info("[FIND] Borrowing book with id={}", borrowId);
         return borrowRepository.findById(borrowId).orElseThrow(() ->{
-            log.error("[FIND] Book not found with id={}", borrowId);
+            log.error("[BORROW] Book not found with id={}", borrowId);
             return new RuntimeException("Not found");
         });
     }
