@@ -83,6 +83,7 @@ public class ExcelExportServiceImpl implements ExcelExportService {
         } catch (IOException e) {
             throw new RuntimeException("File error while upload", e);
         } catch (Exception e) {
+            log.error("Upload to MinIO failed for file {}", fileName, e);
             throw new RuntimeException("Upload to minIO failed", e);
         } finally {
             if (file.exists() && !file.delete()) {
