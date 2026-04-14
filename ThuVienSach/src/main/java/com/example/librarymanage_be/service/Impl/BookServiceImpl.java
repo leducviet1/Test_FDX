@@ -1,13 +1,19 @@
-package com.example.librarymanage_be.service;
+package com.example.librarymanage_be.service.Impl;
 
 import com.example.librarymanage_be.dto.request.BookRequest;
 import com.example.librarymanage_be.dto.response.BookResponse;
+import com.example.librarymanage_be.elasticsearch.document.BookDocument;
+import com.example.librarymanage_be.elasticsearch.service.ElasticSearchBookService;
 import com.example.librarymanage_be.entity.Author;
 import com.example.librarymanage_be.entity.Book;
 import com.example.librarymanage_be.entity.BookAuthor;
 import com.example.librarymanage_be.enums.BookStatus;
 import com.example.librarymanage_be.mapper.BookMapper;
 import com.example.librarymanage_be.repo.*;
+import com.example.librarymanage_be.service.AuthorService;
+import com.example.librarymanage_be.service.BookService;
+import com.example.librarymanage_be.service.CategoryService;
+import com.example.librarymanage_be.service.PublisherService;
 import com.example.librarymanage_be.specification.BookSpecification;
 import com.example.librarymanage_be.utils.EntityUtils;
 import lombok.RequiredArgsConstructor;
@@ -16,16 +22,23 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static com.example.librarymanage_be.specification.BookSpecification.idIn;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
+    private final ElasticSearchBookService elasticSearchBookService;
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
     private final AuthorService authorService;
@@ -64,6 +77,7 @@ public class BookServiceImpl implements BookService {
                 .toList();
         bookMap.setBookAuthors(bookAuthors);
         Book savedBook = bookRepository.save(bookMap);
+        elasticSearchBookService.save(savedBook);
         log.info("[BOOK] Created book with name={}", savedBook.getTitle());
         return bookMapper.toResponse(savedBook);
     }
@@ -123,6 +137,7 @@ public class BookServiceImpl implements BookService {
                 return ba;
             }).toList();
             bookAuthorRepository.saveAll(bookAuthors);
+            bookExist.setBookAuthors(bookAuthors);
         }
         bookExist.setPrice(bookRequest.getPrice());
         if (bookRequest.getTotalQuantity() != null) {
@@ -136,31 +151,77 @@ public class BookServiceImpl implements BookService {
             }
         }
         Book updatedBook = bookRepository.save(bookExist);
+        elasticSearchBookService.save(updatedBook);
         log.info("[BOOK] Updated successfully a new book with id={},name={}", updatedBook.getBookId(), updatedBook.getTitle());
         return bookMapper.toResponse(updatedBook);
     }
 
     @Override
-    @CacheEvict(value = "books",key = "#bookId")
+    @CacheEvict(value = "books", key = "#bookId")
     public void delete(Integer bookId) {
         Book bookExisted = EntityUtils.getOrThrow(bookRepository.findById(bookId), "Book not found");
         bookRepository.delete(bookExisted);
+        elasticSearchBookService.deleteById(bookId);
         log.info("[BOOK] Deleted book with id={}", bookId);
     }
 
     @Override
-    public Page<BookResponse> searchBooks(String title, String categoryName, String authorName, Pageable pageable) {
-        Specification<Book> spec = (root, query, criteriaBuilder) -> criteriaBuilder.conjunction();
-        if (title != null) {
-            spec = spec.and(BookSpecification.hasTitle(title));
+    public Page<BookResponse> searchBooks(String keyword, String categoryName, String authorName, Pageable pageable) {
+        if (keyword == null || keyword.isBlank()) {
+            Specification<Book> spec = (root, query, criteriaBuilder) -> criteriaBuilder.conjunction();
+            if (categoryName != null) {
+                spec = spec.and(BookSpecification.hasCategory(categoryName));
+            }
+            if (authorName != null) {
+                spec = spec.and(BookSpecification.hasAuthor(authorName));
+            }
+            return bookRepository.findAll(spec, pageable).map(bookMapper::toResponse);
         }
+
+        Page<BookDocument> esResult = elasticSearchBookService.search(keyword, pageable);
+        if (esResult.isEmpty()) {
+            return Page.empty(pageable);
+        }
+        //Lấy id
+        List<Integer> ids = esResult.getContent()
+                .stream()
+                .map(BookDocument::getId)
+                .toList();
+
+        Specification<Book> spec = Specification.where(idIn(ids));
+
+//        Specification<Book> spec = (root, query, criteriaBuilder) -> criteriaBuilder.conjunction();
         if (categoryName != null) {
             spec = spec.and(BookSpecification.hasCategory(categoryName));
         }
         if (authorName != null) {
             spec = spec.and(BookSpecification.hasAuthor(authorName));
         }
-        Page<Book> books = bookRepository.findAll(spec, pageable);
-        return books.map(bookMapper::toResponse);
+//        Page<Book> books = bookRepository.findAll(spec, pageable);
+//        return books.map(bookMapper::toResponse);
+        List<Book> books = bookRepository.findAll(spec);
+
+        //GIỮ ORDER ES
+        Map<Integer, Integer> orderMap = new HashMap<>();
+        for (int i = 0; i < ids.size(); i++) {
+            orderMap.put(ids.get(i), i);
+        }
+
+        books.sort(Comparator.comparingInt(
+                b -> orderMap.getOrDefault(b.getBookId(), Integer.MAX_VALUE)
+        ));
+
+        //MAP RESPONSE
+        List<BookResponse> responses = books.stream()
+                .map(bookMapper::toResponse)
+                .toList();
+
+        // RETURN PAGE
+        return new PageImpl<>(
+                responses,
+                pageable,
+                esResult.getTotalElements()
+        );
     }
+
 }

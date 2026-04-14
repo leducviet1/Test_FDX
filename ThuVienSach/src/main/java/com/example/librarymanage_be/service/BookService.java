@@ -12,7 +12,7 @@ public interface BookService {
     /**
      * Tìm kiếm sách theo title, tên thể loại, tên tác giả
      */
-    Page<BookResponse> searchBooks(String title, String categoryName, String authorName, Pageable pageable);
+    Page<BookResponse> searchBooks(String keyword, String categoryName, String authorName, Pageable pageable);
 
     /**
      *

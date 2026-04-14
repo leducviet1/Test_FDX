@@ -32,12 +32,12 @@ public class BookController {
     @GetMapping ("/search")
     public Page<BookResponse> searchBooks(@RequestParam(defaultValue = "0") int page,
                                           @RequestParam(defaultValue = "5") int size,
-                                          @RequestParam(required = false) String title,
+                                          @RequestParam(required = false) String keyword,
                                           @RequestParam(required = false) String categoryName,
                                           @RequestParam(required = false) String authorName
                                           ){
         Pageable pageable = PageRequest.of(page, size);
-        return bookService.searchBooks(title,categoryName,authorName,pageable);
+        return bookService.searchBooks(keyword,categoryName,authorName,pageable);
     }
     @PostMapping("/create")
     public BookResponse create(@Valid  @RequestBody  BookRequest bookRequest){
