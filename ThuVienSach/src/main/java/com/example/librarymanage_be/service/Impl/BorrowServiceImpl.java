@@ -1,4 +1,4 @@
-package com.example.librarymanage_be.service;
+package com.example.librarymanage_be.service.Impl;
 
 import com.example.librarymanage_be.config.FineConfig;
 import com.example.librarymanage_be.dto.request.BorrowItemRequest;
@@ -12,6 +12,9 @@ import com.example.librarymanage_be.enums.FineStatus;
 import com.example.librarymanage_be.enums.FineType;
 import com.example.librarymanage_be.repo.BorrowDetailRepository;
 import com.example.librarymanage_be.repo.BorrowRepository;
+import com.example.librarymanage_be.service.BookService;
+import com.example.librarymanage_be.service.BorrowService;
+import com.example.librarymanage_be.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -93,7 +96,7 @@ public class BorrowServiceImpl implements BorrowService {
             return new RuntimeException("Not found");
         });
 
-        if (detail.getStatus().equals(BorrowStatus.RETURNED)) {
+        if (detail.getStatus().equals(BorrowDetailStatus.RETURNED)) {
             log.error("[BORROW_DETAIL] Borrow already returned");
             throw new RuntimeException("Sách đã trả");
         }

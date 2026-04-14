@@ -2,6 +2,7 @@ package com.example.librarymanage_be.controller;
 
 import com.example.librarymanage_be.dto.request.BookRequest;
 import com.example.librarymanage_be.dto.response.BookResponse;
+import com.example.librarymanage_be.dto.response.ExportResponse;
 import com.example.librarymanage_be.export.ExcelExportService;
 import com.example.librarymanage_be.service.BookService;
 import jakarta.validation.Valid;
@@ -10,7 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
-
 import java.io.IOException;
 
 @RestController
@@ -52,10 +52,12 @@ public class BookController {
         bookService.delete(id);
     }
     @GetMapping("/export")
-    public void export(@RequestParam(defaultValue = "0") int page,
-                         @RequestParam(defaultValue = "5") int size) throws IOException {
+
+    public ExportResponse export(@RequestParam(defaultValue = "0") int page,
+                                 @RequestParam(defaultValue = "5") int size) throws IOException {
         Pageable pageable = PageRequest.of(page, size);
         Page<BookResponse> books = bookService.getBooks(pageable);
-        excelExportService.exportBooks(books);
+        String url = excelExportService.exportBooks(books);
+        return new ExportResponse(url,"Export successful");
     }
 }

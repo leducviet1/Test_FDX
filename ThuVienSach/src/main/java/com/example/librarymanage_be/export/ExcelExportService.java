@@ -6,5 +6,5 @@ import org.springframework.data.domain.Page;
 import java.io.IOException;
 
 public interface ExcelExportService {
-    void exportBooks(Page<BookResponse> books) throws IOException;
+    String exportBooks(Page<BookResponse> books) throws IOException;
 }
