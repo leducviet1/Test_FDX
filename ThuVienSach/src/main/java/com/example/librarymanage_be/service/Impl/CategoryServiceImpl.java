@@ -6,6 +6,7 @@ import com.example.librarymanage_be.entity.Category;
 import com.example.librarymanage_be.mapper.CategoryMapper;
 import com.example.librarymanage_be.repo.CategoryRepository;
 import com.example.librarymanage_be.service.CategoryService;
+import com.example.librarymanage_be.utils.EntityUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -30,15 +31,6 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category findById(Integer categoryId) {
-        log.info("[CATEGORY] Finding a category with id={}", categoryId);
-        return categoryRepository.findById(categoryId).orElseThrow(() -> {
-            log.error("[CATEGORY] Category not found w  ith id={}", categoryId);
-            return new RuntimeException("Category not found");
-        });
-    }
-
-    @Override
     public Page<CategoryResponse> getCategories(Pageable pageable) {
         log.info("[CATEGORY] Getting categories - page={},size={}", pageable.getPageNumber(), pageable.getPageSize());
         Page<Category> categories = categoryRepository.findAll(pageable);
@@ -49,7 +41,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void deleteById(Integer categoryId) {
         log.info("[CATEGORY] Deleting category with id={}", categoryId);
-        Category categoryExist = findById(categoryId);
+        Category categoryExist = findEntityById(categoryId);
         categoryRepository.delete(categoryExist);
         log.info("[CATEGORY] Deleted successfully with id={}", categoryId);
     }
@@ -57,10 +49,17 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryResponse update(Integer categoryId, CategoryRequest category) {
         log.info("[CATEGORY] Updating category with id={}", categoryId);
-        Category categoryExist = findById(categoryId);
+        Category categoryExist = findEntityById(categoryId);
         categoryExist.setCategoryName(category.getCategoryName());
         Category categoryUpdated = categoryRepository.save(categoryExist);
         log.info("[CATEGORY] Updated successfully with id={}", categoryUpdated.getCategoryId());
         return categoryMapper.toResponse(categoryUpdated);
+    }
+
+
+    @Override
+    public Category findEntityById(Integer categoryId) {
+        return EntityUtils.getOrThrow(categoryRepository.findById(categoryId),
+                "Category not found with id=" + categoryId);
     }
 }

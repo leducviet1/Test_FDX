@@ -6,11 +6,13 @@ import com.example.librarymanage_be.entity.Publisher;
 import com.example.librarymanage_be.mapper.PublisherMapper;
 import com.example.librarymanage_be.repo.PublisherRepository;
 import com.example.librarymanage_be.service.PublisherService;
+import com.example.librarymanage_be.utils.EntityUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 
 @Slf4j
 @Service
@@ -38,7 +40,7 @@ public class PublisherServiceImpl implements PublisherService {
 
     @Override
     public PublisherResponse updatePublisher(Integer id, PublisherRequest publisherRequest) {
-        Publisher existedPublisher = findById(id);
+        Publisher existedPublisher = findEntityById(id);
         log.info("[PUBLISHER] Updating publisher with id={}, name={}", id, existedPublisher.getPublisherName());
         existedPublisher.setPublisherName(publisherRequest.getPublisherName());
         Publisher updatedPublisher = publisherRepository.save(existedPublisher);
@@ -48,18 +50,15 @@ public class PublisherServiceImpl implements PublisherService {
 
     @Override
     public void deletePublisher(Integer id) {
-        Publisher existedPublisher = findById(id);
+        Publisher existedPublisher = findEntityById(id);
         log.info("[PUBLISHER] Deleting publisher with id={}", id);
         publisherRepository.delete(existedPublisher);
         log.info("[PUBLISHER] Deleted publisher with id={}", id);
     }
 
     @Override
-    public Publisher findById(Integer id) {
-        log.info("[PUBLISHER] Getting publisher with id={}", id);
-        return publisherRepository.findById(id).orElseThrow(() -> {
-            log.error("[PUBLISHER] Publisher with id={} not found", id);
-            return new RuntimeException("Not found Publisher");
-        });
+    public Publisher findEntityById(Integer id) {
+        return EntityUtils.getOrThrow(publisherRepository.findById(id),
+                "Publisher not found with id=" + id);
     }
 }

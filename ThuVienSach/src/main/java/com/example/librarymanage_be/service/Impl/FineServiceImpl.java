@@ -11,6 +11,7 @@ import com.example.librarymanage_be.mapper.FineMapper;
 import com.example.librarymanage_be.repo.FineRepository;
 import com.example.librarymanage_be.service.BorrowDetailService;
 import com.example.librarymanage_be.service.FineService;
+import com.example.librarymanage_be.utils.EntityUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -60,20 +61,15 @@ public class FineServiceImpl implements FineService {
     @Override
     public void pay(Integer fineId) {
         log.info("[FINE] Starting payment for fine with id={}",fineId);
-        Fine fine = findById(fineId);
+        Fine fine = findEntityById(fineId);
         fine.setStatus(FineStatus.PAIDED);
         fineRepository.save(fine);
         log.info("[FINE] Payment successfully for fine with id={}",fineId);
     }
 
     @Override
-    public Fine findById(Integer fineId) {
-        log.info("[FINE] Getting fine with id={}",fineId);
-        return fineRepository.findById(fineId).orElseThrow(()->
-        {
-            log.info("[FINE] Not found fine with id={}",fineId);
-            return new RuntimeException("Not found");
-        });
+    public Fine findEntityById(Integer fineId) {
+       return EntityUtils.getOrThrow(fineRepository.findById(fineId),"Fine not found with id=" +fineId);
     }
 
 }

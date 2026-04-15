@@ -57,8 +57,8 @@ public class BookServiceImpl implements BookService {
         } else {
             bookMap.setBookStatus(BookStatus.INACTIVE);
         }
-        bookMap.setCategory(categoryService.findById(bookRequest.getCategoryId()));
-        bookMap.setPublisher(publisherService.findById(bookRequest.getPublisherId()));
+        bookMap.setCategory(categoryService.findEntityById(bookRequest.getCategoryId()));
+        bookMap.setPublisher(publisherService.findEntityById(bookRequest.getPublisherId()));
 
         List<Integer> authorIds = bookRequest.getAuthorIds()
                 .stream()
@@ -114,14 +114,12 @@ public class BookServiceImpl implements BookService {
         Book bookExist = EntityUtils.getOrThrow(bookRepository.findById(bookId), "Book not found");
         bookMapper.updateBook(bookExist, bookRequest);
         if (bookRequest.getCategoryId() != null) {
-            bookExist.setCategory(categoryService.findById(bookRequest.getCategoryId()));
+            bookExist.setCategory(categoryService.findEntityById(bookRequest.getCategoryId()));
         }
         if (bookRequest.getPublisherId() != null) {
-            bookExist.setPublisher(publisherService.findById(bookRequest.getPublisherId()));
+            bookExist.setPublisher(publisherService.findEntityById(bookRequest.getPublisherId()));
         }
-
         if (bookRequest.getAuthorIds() != null) {
-
             List<Integer> authorIds = bookRequest.getAuthorIds()
                     .stream()
                     .distinct()
@@ -197,8 +195,6 @@ public class BookServiceImpl implements BookService {
         if (authorName != null) {
             spec = spec.and(BookSpecification.hasAuthor(authorName));
         }
-//        Page<Book> books = bookRepository.findAll(spec, pageable);
-//        return books.map(bookMapper::toResponse);
         List<Book> books = bookRepository.findAll(spec);
 
         //GIỮ ORDER ES

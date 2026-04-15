@@ -19,5 +19,5 @@ public interface FineService {
 
     void pay(Integer fineId);
 
-    Fine findById(Integer fineId);
+    Fine findEntityById(Integer fineId);
 }

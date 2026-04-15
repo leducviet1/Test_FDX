@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
 public interface CategoryService {
     CategoryResponse create(CategoryRequest categoryRequest);
 
-    Category findById(Integer categoryId);
+    Category findEntityById(Integer categoryId);
 
     Page<CategoryResponse> getCategories(Pageable pageable);
 

@@ -10,7 +10,7 @@ public interface UserService {
 
     Page<User> getUsers(Pageable pageable);
 
-    User findById(Integer id);
+    User findEntityById(Integer id);
 
     User findByEmail(String email);
 

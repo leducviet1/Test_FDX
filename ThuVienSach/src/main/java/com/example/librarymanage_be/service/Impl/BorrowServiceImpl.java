@@ -10,11 +10,14 @@ import com.example.librarymanage_be.enums.BorrowDetailStatus;
 import com.example.librarymanage_be.enums.BorrowStatus;
 import com.example.librarymanage_be.enums.FineStatus;
 import com.example.librarymanage_be.enums.FineType;
+import com.example.librarymanage_be.exception.BadRequestException;
 import com.example.librarymanage_be.repo.BorrowDetailRepository;
 import com.example.librarymanage_be.repo.BorrowRepository;
 import com.example.librarymanage_be.service.BookService;
+import com.example.librarymanage_be.service.BorrowDetailService;
 import com.example.librarymanage_be.service.BorrowService;
 import com.example.librarymanage_be.service.UserService;
+import com.example.librarymanage_be.utils.EntityUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,6 +36,7 @@ public class BorrowServiceImpl implements BorrowService {
     private final BorrowRepository borrowRepository;
     private final BookService bookService;
     private final BorrowDetailRepository borrowDetailRepository;
+    private final BorrowDetailService borrowDetailService;
 
     @Override
     public BorrowResponse toResponse(Borrow borrow, List<BorrowDetail> details) {
@@ -53,7 +57,6 @@ public class BorrowServiceImpl implements BorrowService {
                     return d;
                 })
                 .toList();
-
         borrowResponse.setDetails(detailResponses);
         return borrowResponse;
     }
@@ -61,7 +64,7 @@ public class BorrowServiceImpl implements BorrowService {
     @Override
     public BorrowResponse borrowBooks(BorrowRequest borrowRequest) {
         log.info("[BORROW] Borrowing book with userId={}", borrowRequest.getUserId());
-        User user = userService.findById(borrowRequest.getUserId());
+        User user = userService.findEntityById(borrowRequest.getUserId());
         Borrow borrow = new Borrow();
         borrow.setUser(user);
         borrow.setBorrowDate(LocalDateTime.now());
@@ -91,14 +94,10 @@ public class BorrowServiceImpl implements BorrowService {
 
     @Override
     public void returnBook(Integer borrowDetailId) {
-        BorrowDetail detail = borrowDetailRepository.findById(borrowDetailId).orElseThrow(() -> {
-            log.error("[BORROW_DETAIL] BorrowDetail not found with id={}", borrowDetailId);
-            return new RuntimeException("Not found");
-        });
-
+        BorrowDetail detail = borrowDetailService.findById(borrowDetailId);
         if (detail.getStatus().equals(BorrowDetailStatus.RETURNED)) {
             log.error("[BORROW_DETAIL] Borrow already returned");
-            throw new RuntimeException("Sách đã trả");
+            throw new BadRequestException("Sách đã trả");
         }
         Book book = detail.getBook();
         book.setAvailableQuantity(book.getAvailableQuantity() + detail.getQuantity());
@@ -153,10 +152,7 @@ public class BorrowServiceImpl implements BorrowService {
 
     @Override
     public Borrow findById(Integer borrowId) {
-        log.info("[FIND] Borrowing book with id={}", borrowId);
-        return borrowRepository.findById(borrowId).orElseThrow(() ->{
-            log.error("[BORROW] Book not found with id={}", borrowId);
-            return new RuntimeException("Not found");
-        });
+        return EntityUtils.getOrThrow(borrowRepository.findById(borrowId)
+                ,"Borrow not found with id=" + borrowId);
     }
 }

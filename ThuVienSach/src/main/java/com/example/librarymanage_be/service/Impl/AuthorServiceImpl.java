@@ -6,6 +6,7 @@ import com.example.librarymanage_be.entity.Author;
 import com.example.librarymanage_be.mapper.AuthorMapper;
 import com.example.librarymanage_be.repo.AuthorRepository;
 import com.example.librarymanage_be.service.AuthorService;
+import com.example.librarymanage_be.utils.EntityUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -23,7 +24,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public AuthorResponse create(AuthorRequest authorRequest) {
-        log.info("[AUTHOR] Creating a new Author with name={}", authorRequest.getAuthorName());
+        log.info("[AUTHOR] Creating a new author  name={}", authorRequest.getAuthorName());
         Author authorMapped = authorMapper.toEntity(authorRequest);
         Author authorSaved = authorRepository.save(authorMapped);
         log.info("[AUTHOR] Created successfully a new Author with name={}", authorRequest.getAuthorName());
@@ -41,7 +42,7 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public AuthorResponse update(Integer authorId, AuthorRequest authorRequest) {
         log.info("[AUTHOR] Updating Author with id={}", authorId);
-        Author authorExist = findAuthorById(authorId);
+        Author authorExist = findEntityById(authorId);
         authorMapper.updateEntity(authorRequest, authorExist);
         Author authorUpdated = authorRepository.save(authorExist);
         log.info("[AUTHOR] Updated successfully author with id={},name={}", authorUpdated.getAuthorId(), authorUpdated.getAuthorName());
@@ -50,24 +51,20 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public void delete(Integer authorId) {
-        Author authorExist = findAuthorById(authorId);
+        Author authorExist = findEntityById(authorId);
         authorRepository.delete(authorExist);
         log.info("[AUTHOR] Deleted Author with id={}", authorId);
     }
 
     @Override
-    public Author findAuthorById(Integer authorId) {
-        log.info("[AUTHOR] Finding Author with id={}", authorId);
-        return authorRepository.findById(authorId).orElseThrow(() -> {
-            log.error("[AUTHOR] Author not found");
-            return new RuntimeException("Author Not Found");
-        });
-
+    public Author findEntityById(Integer authorId) {
+        return EntityUtils
+                .getOrThrow(authorRepository.findById(authorId),"Author with id="  + authorId + " not found");
     }
 
     @Override
     public AuthorResponse findById(Integer authorId) {
-        Author author = findAuthorById(authorId);
+        Author author = findEntityById(authorId);
         log.info("[AUTHOR] Found successfully a new Author with id={}", author.getAuthorId());
         return authorMapper.toResponse(author);
     }

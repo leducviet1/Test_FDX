@@ -23,7 +23,7 @@ public interface AuthorService {
 
     void delete(Integer authorId);
 
-    Author findAuthorById(Integer authorId);
+    Author findEntityById(Integer authorId);
 
     AuthorResponse findById(Integer authorId);
 

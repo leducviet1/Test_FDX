@@ -15,5 +15,5 @@ public interface PublisherService {
 
     void deletePublisher(Integer id);
 
-    Publisher findById(Integer id);
+    Publisher findEntityById(Integer id);
 }

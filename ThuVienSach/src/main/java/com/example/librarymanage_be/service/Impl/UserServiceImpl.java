@@ -3,6 +3,7 @@ package com.example.librarymanage_be.service.Impl;
 import com.example.librarymanage_be.entity.User;
 import com.example.librarymanage_be.repo.UserRepository;
 import com.example.librarymanage_be.service.UserService;
+import com.example.librarymanage_be.utils.EntityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,8 +25,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findById(Integer id) {
-        return userRepository.findById(id).orElseThrow(()->new RuntimeException("Not found user with id:"+id));
+    public User findEntityById(Integer id) {
+        return EntityUtils.getOrThrow(userRepository.findById(id),
+                "User not found with id=" + id);
     }
 
     @Override

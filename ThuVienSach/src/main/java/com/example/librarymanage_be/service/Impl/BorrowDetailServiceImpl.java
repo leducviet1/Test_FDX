@@ -3,6 +3,7 @@ package com.example.librarymanage_be.service.Impl;
 import com.example.librarymanage_be.entity.BorrowDetail;
 import com.example.librarymanage_be.repo.BorrowDetailRepository;
 import com.example.librarymanage_be.service.BorrowDetailService;
+import com.example.librarymanage_be.utils.EntityUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -12,12 +13,10 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class BorrowDetailServiceImpl implements BorrowDetailService {
     private final BorrowDetailRepository borrowDetailRepository;
+
     @Override
     public BorrowDetail findById(Integer id) {
-        log.info("[BORROW_DETAIL] Finding BorrowDetail with id={}",id);
-        return borrowDetailRepository.findById(id).orElseThrow(()->{
-            log.error("BORROW_DETAIL not found with id={}", id);
-            return new RuntimeException("Not found");
-        });
+        return EntityUtils.getOrThrow(borrowDetailRepository.findById(id),
+                "BorrowDetail not found with id=" + id);
     }
 }
