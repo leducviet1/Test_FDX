@@ -19,12 +19,9 @@ import org.springframework.web.bind.annotation.*;
 public class PublisherController {
     private final PublisherService publisherService;
 
-//    public PublisherController(PublisherService publisherService) {
-//        this.publisherService = publisherService;
-//    }
     @GetMapping
-    public Page<PublisherResponse> getPublishers(@RequestParam(defaultValue = "0")int page,
-                                          @RequestParam(defaultValue = "5")int size) {
+    public Page<PublisherResponse> getPublishers(@RequestParam(defaultValue = "0") int page,
+                                                 @RequestParam(defaultValue = "5") int size) {
         Pageable pageable = PageRequest.of(page, size);
         return publisherService.getPublishers(pageable);
     }
@@ -38,12 +35,14 @@ public class PublisherController {
     public PublisherResponse create(@RequestBody @Valid PublisherRequest publisherRequest) {
         return publisherService.createPublisher(publisherRequest);
     }
+
     @PutMapping("/update/{id}")
     public PublisherResponse update(@PathVariable Integer id,
-                            @Valid
-                            @RequestBody PublisherRequest publisherRequest) {
+                                    @Valid
+                                    @RequestBody PublisherRequest publisherRequest) {
         return publisherService.updatePublisher(id, publisherRequest);
     }
+
     @DeleteMapping("/delete/{id}")
     public void delete(@PathVariable int id) {
         publisherService.deletePublisher(id);
