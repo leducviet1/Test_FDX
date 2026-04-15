@@ -26,7 +26,7 @@ public class CategoryController {
 
     @GetMapping("{id}")
     public Category findById(@PathVariable Integer id) {
-        return categoryService.findById(id);
+        return categoryService.findEntityById(id);
     }
 
     @PostMapping("/create")

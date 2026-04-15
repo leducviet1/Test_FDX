@@ -31,7 +31,7 @@ public class PublisherController {
 
     @GetMapping("/{id}")
     public Publisher findById(@PathVariable int id) {
-        return publisherService.findById(id);
+        return publisherService.findEntityById(id);
     }
 
     @PostMapping("/create")
