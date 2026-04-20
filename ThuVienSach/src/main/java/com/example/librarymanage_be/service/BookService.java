@@ -32,7 +32,6 @@ public interface BookService {
 
     Book getEntityById(Integer id);
 
-
     /**
      * Cập nhật sách
      */

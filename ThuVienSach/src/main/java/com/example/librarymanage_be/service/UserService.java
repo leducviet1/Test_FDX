@@ -1,20 +1,16 @@
 package com.example.librarymanage_be.service;
 
-import com.example.librarymanage_be.entity.User;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import com.example.librarymanage_be.entity.Users;
 
 
 public interface UserService {
-    User create(User user);
+    Users create(Users user);
 
-    Page<User> getUsers(Pageable pageable);
 
-    User findEntityById(Integer id);
+    Users findEntityById(Integer id);
 
-    User findByEmail(String email);
 
-    User update(User user);
+    Users update(Users user);
 
     void delete(Integer id);
 }

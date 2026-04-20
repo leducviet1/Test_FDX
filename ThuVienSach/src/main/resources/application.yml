@@ -14,4 +14,8 @@ spring:
     bucket:
       avatar: avatars
       report: reports
+
+  jwt:
+    secret: 4lZFtDImGPq0LwFN40w4heElY+KIYqZtY1zraGjGfkg=
+    expiration: 600000
       
