@@ -11,7 +11,6 @@ import java.util.List;
 public interface AuthorService {
 
     // search, find-all, create, update, update 1 phan (patch), delete
-
     /**
      * Phân trang
      */
