@@ -3,7 +3,9 @@ package com.example.librarymanage_be.service.Impl;
 import com.example.librarymanage_be.dto.request.LoginRequest;
 import com.example.librarymanage_be.dto.request.RegisterRequest;
 import com.example.librarymanage_be.dto.response.AuthResponse;
+import com.example.librarymanage_be.dto.response.LoginResponse;
 import com.example.librarymanage_be.entity.Roles;
+import com.example.librarymanage_be.entity.UserRoleId;
 import com.example.librarymanage_be.entity.Users;
 import com.example.librarymanage_be.entity.UserRole;
 import com.example.librarymanage_be.repo.RoleRepository;
@@ -41,23 +43,32 @@ public class AuthServiceImpl implements AuthService {
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         user.setCreatedAt(LocalDateTime.now());
 
+        //gán role
+        Roles role = getDefaultRole();
+
         UserRole userRole = new UserRole();
         userRole.setUser(user);
-        userRole.setRole(getDefaultRole());
+        userRole.setRole(role);
+        user.getUserRoles().add(userRole);
 
-        Users savedUser = userRepository.save(user);
-        String token = jwtService.generateToken(savedUser.getEmail());
-        return new AuthResponse(token);
+        UserRoleId id = new UserRoleId();
+        id.setUserId(user.getUserId());
+        id.setRoleId(role.getRoleId());
+
+        userRole.setId(id);
+        userRepository.save(user);
+        return new AuthResponse("Register success");
     }
 
     @Override
-    public AuthResponse login(LoginRequest loginRequest) {
+    public LoginResponse login(LoginRequest loginRequest) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 loginRequest.getEmail(), loginRequest.getPassword()
         ));
         Users user = userRepository.findByEmail(loginRequest.getEmail());
-        String token = jwtService.generateToken(user.getEmail());
-        return new AuthResponse(token);
+        String accessToken = jwtService.generateAccessToken(user.getEmail());
+        String refreshToken = jwtService.generateRefreshToken(user.getEmail());
+        return new LoginResponse(accessToken,refreshToken);
     }
 
     private String normalizeEmail(String email) {

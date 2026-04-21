@@ -21,9 +21,10 @@ public class JWTService {
     @Value("${spring.jwt.expiration}")
     private long jwtExpiration;
 
-    //Tạo token
-    public String generateToken(String email) {
+    //Tạo Access token
+    public String generateAccessToken(String email) {
         Map<String, Object> claims = new HashMap<>();
+        claims.put("type","access");
         return Jwts.builder()
                 .claims()
                 .add(claims)
@@ -33,6 +34,26 @@ public class JWTService {
                 .and()
                 .signWith(getKey())
                 .compact();
+    }
+
+    //Tạo Refresh Token
+    public String generateRefreshToken(String email) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("type", "refresh");
+        return Jwts.builder()
+                .claims()
+                .add(claims)
+                .subject(email)
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + jwtExpiration * 24))
+                .and()
+                .signWith(getKey())
+                .compact();
+    }
+
+    //Lấy type
+    public String extractType(String token) {
+        return extractClaim(token, claims -> claims.get("type",String.class));
     }
 
     //Lấy email từ token
@@ -72,8 +93,10 @@ public class JWTService {
     }
 
     //Validate token
-    public boolean validateToken(String token, UserDetails userDetails) {
+    public boolean validateToken(String token, UserDetails userDetails, String expectedType) {
         final String email = extractEmail(token);
-        return (email.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        final String type = extractType(token);
+
+        return (email.equals(userDetails.getUsername()) && type.equals(expectedType) && !isTokenExpired(token));
     }
 }
