@@ -1,6 +1,6 @@
 package com.example.librarymanage_be.controller;
 
-import com.example.librarymanage_be.entity.User;
+import com.example.librarymanage_be.entity.Users;
 import com.example.librarymanage_be.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
     public class UserController {
     private final UserService userService;
     @PostMapping
-    public User addUser(@RequestBody User user) {
+    public Users addUser(@RequestBody Users user) {
         return userService.create(user);
     }
 }

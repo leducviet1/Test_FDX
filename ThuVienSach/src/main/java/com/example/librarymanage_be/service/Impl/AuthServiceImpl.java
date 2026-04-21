@@ -9,7 +9,7 @@ import com.example.librarymanage_be.entity.UserRole;
 import com.example.librarymanage_be.repo.RoleRepository;
 import com.example.librarymanage_be.repo.UserRepository;
 import com.example.librarymanage_be.service.AuthService;
-import com.example.librarymanage_be.service.JWTService;
+import com.example.librarymanage_be.service.auth.JWTService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

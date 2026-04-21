@@ -5,12 +5,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
-@Table(name = "users")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer userId;
@@ -20,11 +23,16 @@ public class User {
 
     private String email;
 
-    @Column(name = "phone")
-    private String phoneNumber;
+    private String phone;
 
     private String address;
 
     private String password;
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    private Set<UserRole> userRoles = new HashSet<>();
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
 }

@@ -1,7 +1,7 @@
 package com.example.librarymanage_be.config;
 
-import com.example.librarymanage_be.service.CustomUserDetailsService;
-import com.example.librarymanage_be.service.JWTFilter;
+import com.example.librarymanage_be.service.auth.CustomUserDetailsService;
+import com.example.librarymanage_be.service.auth.JWTFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,7 +9,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;

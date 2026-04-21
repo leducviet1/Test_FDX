@@ -1,4 +1,4 @@
-package com.example.librarymanage_be.service;
+package com.example.librarymanage_be.service.auth;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
