@@ -1,4 +1,4 @@
-package com.example.librarymanage_be.service;
+package com.example.librarymanage_be.service.auth;
 
 import com.example.librarymanage_be.entity.Users;
 import com.example.librarymanage_be.entity.UserPrincipal;
