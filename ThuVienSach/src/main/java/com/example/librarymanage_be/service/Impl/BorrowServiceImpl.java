@@ -39,14 +39,14 @@ public class BorrowServiceImpl implements BorrowService {
     private final BorrowDetailService borrowDetailService;
 
     @Override
-    public BorrowResponse toResponse(Borrow borrow, List<BorrowDetail> details) {
+    public BorrowResponse toResponse(Borrows borrows, List<BorrowDetail> details) {
         BorrowResponse borrowResponse = new BorrowResponse();
-        borrowResponse.setBorrowId(borrow.getBorrowId());
-        borrowResponse.setUserId(borrow.getUser().getUserId());
-        borrowResponse.setBorrowDate(borrow.getBorrowDate());
-        borrowResponse.setDueDate(borrow.getDueDate());
-        borrowResponse.setReturnDate(borrow.getReturnDate());
-        borrowResponse.setBorrowStatus(borrow.getStatus().toString());
+        borrowResponse.setBorrowId(borrows.getBorrowId());
+        borrowResponse.setUserId(borrows.getUser().getUserId());
+        borrowResponse.setBorrowDate(borrows.getBorrowDate());
+        borrowResponse.setDueDate(borrows.getDueDate());
+        borrowResponse.setReturnDate(borrows.getReturnDate());
+        borrowResponse.setBorrowStatus(borrows.getStatus().toString());
         List<BorrowDetailResponse> detailResponses = details.stream()
                 .map(detail -> {
                     BorrowDetailResponse d = new BorrowDetailResponse();
@@ -64,13 +64,13 @@ public class BorrowServiceImpl implements BorrowService {
     @Override
     public BorrowResponse borrowBooks(BorrowRequest borrowRequest) {
         log.info("[BORROW] Borrowing book with userId={}", borrowRequest.getUserId());
-        User user = userService.findEntityById(borrowRequest.getUserId());
-        Borrow borrow = new Borrow();
-        borrow.setUser(user);
-        borrow.setBorrowDate(LocalDateTime.now());
-        borrow.setDueDate(LocalDateTime.now().plusDays(30));
-        borrow.setStatus(BorrowStatus.BORROWING);
-        borrowRepository.save(borrow);
+        Users user = userService.findEntityById(borrowRequest.getUserId());
+        Borrows borrows = new Borrows();
+        borrows.setUser(user);
+        borrows.setBorrowDate(LocalDateTime.now());
+        borrows.setDueDate(LocalDateTime.now().plusDays(30));
+        borrows.setStatus(BorrowStatus.BORROWING);
+        borrowRepository.save(borrows);
         List<BorrowDetail> details = new ArrayList<>();
         for (BorrowItemRequest itemRequest : borrowRequest.getItems()) {
             Book book = bookService.getEntityById(itemRequest.getBookId());
@@ -80,7 +80,7 @@ public class BorrowServiceImpl implements BorrowService {
             }
             book.setAvailableQuantity(book.getAvailableQuantity() - itemRequest.getQuantity());
             BorrowDetail detail = new BorrowDetail();
-            detail.setBorrow(borrow);
+            detail.setBorrows(borrows);
             detail.setBook(book);
             detail.setQuantity(itemRequest.getQuantity());
             detail.setNote(itemRequest.getNote());
@@ -88,15 +88,15 @@ public class BorrowServiceImpl implements BorrowService {
             details.add(detail);
         }
         borrowDetailRepository.saveAll(details);
-        log.info("[BORROW] Borrowing successful with borrowId={}", borrow.getBorrowId());
-        return toResponse(borrow, details);
+        log.info("[BORROW] Borrowing successful with borrowId={}", borrows.getBorrowId());
+        return toResponse(borrows, details);
     }
 
     @Override
     public void returnBook(Integer borrowDetailId) {
         BorrowDetail detail = borrowDetailService.findById(borrowDetailId);
         if (detail.getStatus().equals(BorrowDetailStatus.RETURNED)) {
-            log.error("[BORROW_DETAIL] Borrow already returned");
+            log.error("[BORROW_DETAIL] Borrows already returned");
             throw new BadRequestException("Sách đã trả");
         }
         Book book = detail.getBook();
@@ -119,20 +119,20 @@ public class BorrowServiceImpl implements BorrowService {
             fine.setCreatedAt(LocalDateTime.now());
         }
         borrowDetailRepository.save(detail);
-        Borrow borrow = detail.getBorrow();
-        boolean allReturned = borrow.getDetails().stream().allMatch(d -> d.getReturnDate() != null);
+        Borrows borrows = detail.getBorrows();
+        boolean allReturned = borrows.getDetails().stream().allMatch(d -> d.getReturnDate() != null);
         if (allReturned) {
-            borrow.setStatus(BorrowStatus.RETURNED);
-            borrow.setReturnDate(LocalDateTime.now());
-            borrowRepository.save(borrow);
-            log.info("[BORROW] Borrow successful with borrowId={}", borrow.getBorrowId());
+            borrows.setStatus(BorrowStatus.RETURNED);
+            borrows.setReturnDate(LocalDateTime.now());
+            borrowRepository.save(borrows);
+            log.info("[BORROW] Borrows successful with borrowId={}", borrows.getBorrowId());
         }
     }
 
     @Override
     public BorrowResponse returnAllBooks(Integer borrowId) {
-        Borrow borrow = findById(borrowId);
-        if (borrow.getStatus().equals(BorrowStatus.RETURNED)) {
+        Borrows borrows = findById(borrowId);
+        if (borrows.getStatus().equals(BorrowStatus.RETURNED)) {
             log.error("[BORROW_DETAIL] BorrowDetail already returned");
             throw new RuntimeException("Phiếu này đã trả");
         }
@@ -143,16 +143,16 @@ public class BorrowServiceImpl implements BorrowService {
             detail.setReturnDate(LocalDateTime.now());
             detail.setStatus(BorrowDetailStatus.RETURNED);
         }
-        borrow.setReturnDate(LocalDateTime.now());
-        borrow.setStatus(BorrowStatus.RETURNED);
-        borrowRepository.save(borrow);
-        log.info("[BORROW] Return successful with borrowId={}", borrow.getBorrowId());
-        return toResponse(borrow, details);
+        borrows.setReturnDate(LocalDateTime.now());
+        borrows.setStatus(BorrowStatus.RETURNED);
+        borrowRepository.save(borrows);
+        log.info("[BORROW] Return successful with borrowId={}", borrows.getBorrowId());
+        return toResponse(borrows, details);
     }
 
     @Override
-    public Borrow findById(Integer borrowId) {
+    public Borrows findById(Integer borrowId) {
         return EntityUtils.getOrThrow(borrowRepository.findById(borrowId)
-                ,"Borrow not found with id=" + borrowId);
+                ,"Borrows not found with id=" + borrowId);
     }
 }

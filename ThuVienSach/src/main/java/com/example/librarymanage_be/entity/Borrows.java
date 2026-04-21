@@ -8,16 +8,15 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "borrows")
 @Data
-public class Borrow {
+public class Borrows {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer borrowId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User user;
+    private Users user;
 
     private LocalDateTime borrowDate;
     private LocalDateTime dueDate;

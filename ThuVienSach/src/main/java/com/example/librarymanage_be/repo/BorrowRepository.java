@@ -1,7 +1,7 @@
 package com.example.librarymanage_be.repo;
 
-import com.example.librarymanage_be.entity.Borrow;
+import com.example.librarymanage_be.entity.Borrows;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface BorrowRepository extends JpaRepository<Borrow,Integer> {
+public interface BorrowRepository extends JpaRepository<Borrows,Integer> {
 }
