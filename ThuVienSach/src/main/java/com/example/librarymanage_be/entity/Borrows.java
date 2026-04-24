@@ -19,7 +19,9 @@ public class Borrows {
     private Users user;
 
     private LocalDateTime borrowDate;
+
     private LocalDateTime dueDate;
+
     private LocalDateTime returnDate;
 
     @Enumerated(EnumType.STRING)
