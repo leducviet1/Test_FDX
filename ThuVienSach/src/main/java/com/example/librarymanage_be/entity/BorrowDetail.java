@@ -29,6 +29,8 @@ public class BorrowDetail {
     @Enumerated(EnumType.STRING)
     private BorrowDetailStatus status;
 
+    private LocalDateTime dueDate;
+
     private LocalDateTime returnDate;
 
 }
