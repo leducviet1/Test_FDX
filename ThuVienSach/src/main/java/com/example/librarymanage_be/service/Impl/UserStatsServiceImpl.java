@@ -2,9 +2,7 @@ package com.example.librarymanage_be.service.Impl;
 
 import com.example.librarymanage_be.dto.response.TopUserBorrowResponse;
 import com.example.librarymanage_be.entity.UserStats;
-import com.example.librarymanage_be.entity.Users;
 import com.example.librarymanage_be.repo.UserStatsRepository;
-import com.example.librarymanage_be.service.UserService;
 import com.example.librarymanage_be.service.UserStatsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,13 +14,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserStatsServiceImpl implements UserStatsService {
     private final UserStatsRepository userStatsRepository;
-    private final UserService userService;
 
     private UserStats getOrCreate(Integer userId){
         return userStatsRepository.findById(userId).orElseGet(()->{
-            Users user = userService.findEntityById(userId);
             UserStats userStats = new UserStats();
-            userStats.setUser(user);
+            userStats.setUserId(userId);
             userStats.setTotalBorrowTimes(0);
             userStats.setTotalBorrowBooks(0);
             userStats.setTotalOverdueTimes(0);

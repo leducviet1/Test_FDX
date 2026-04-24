@@ -14,14 +14,13 @@ import java.time.LocalDateTime;
 public class UserStats {
     @Id
     @Column(name = "user_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer userId;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private Users user;
 
-    @Column(name = " total_borrow_times")
+    @Column(name = "total_borrow_times", insertable = false, updatable = false)
     private Integer totalBorrowTimes;
 
     @Column(name = "total_borrow_books")

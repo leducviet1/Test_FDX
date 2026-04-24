@@ -17,7 +17,7 @@ public class BorrowDetail {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "borrow_id")
-    private Borrows borrows;
+    private Borrows borrow;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id")

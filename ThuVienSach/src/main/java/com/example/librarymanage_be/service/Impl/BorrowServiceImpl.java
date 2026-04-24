@@ -15,6 +15,7 @@ import com.example.librarymanage_be.repo.BorrowDetailRepository;
 import com.example.librarymanage_be.repo.BorrowRepository;
 import com.example.librarymanage_be.service.*;
 import com.example.librarymanage_be.utils.EntityUtils;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,7 @@ public class BorrowServiceImpl implements BorrowService {
     private final BookService bookService;
     private final BorrowDetailRepository borrowDetailRepository;
     private final BorrowDetailService borrowDetailService;
+    private final StatsAsyncService statsAsyncService;
     private final UserStatsService userStatsService;
 
     @Override
@@ -59,6 +61,7 @@ public class BorrowServiceImpl implements BorrowService {
         return borrowResponse;
     }
 
+    @Transactional
     @Override
     public BorrowResponse borrowBooks(BorrowRequest borrowRequest) {
         log.info("[BORROW] Borrowing book with userId={}", borrowRequest.getUserId());
@@ -80,7 +83,7 @@ public class BorrowServiceImpl implements BorrowService {
             }
             book.setAvailableQuantity(book.getAvailableQuantity() - itemRequest.getQuantity());
             BorrowDetail detail = new BorrowDetail();
-            detail.setBorrows(borrows);
+            detail.setBorrow(borrows);
             detail.setBook(book);
             detail.setQuantity(itemRequest.getQuantity());
             detail.setNote(itemRequest.getNote());
@@ -90,11 +93,12 @@ public class BorrowServiceImpl implements BorrowService {
             totalBorrowBooks += itemRequest.getQuantity();
         }
         borrowDetailRepository.saveAll(details);
-        userStatsService.increaseBorrowStats(user.getUserId(),totalBorrowBooks);
+        statsAsyncService.handleBorrowCreated(user.getUserId(),totalBorrowBooks);
         log.info("[BORROW] Borrowing successful with borrowId={}", borrows.getBorrowId());
         return toResponse(borrows, details);
     }
 
+    @Transactional
     @Override
     public void returnBook(Integer borrowDetailId) {
         BorrowDetail detail = borrowDetailService.findById(borrowDetailId);
@@ -108,7 +112,7 @@ public class BorrowServiceImpl implements BorrowService {
         detail.setReturnDate(LocalDateTime.now());
 
         //Thống kê
-        userStatsService.increaseReturnStats(detail.getBorrows().getUser().getUserId(), detail.getQuantity());
+        statsAsyncService.handleReturnBook(detail.getBorrow().getUser().getUserId(), detail.getQuantity());
 
         //Số ngày trễ
         long lateDays = 0;
@@ -126,7 +130,7 @@ public class BorrowServiceImpl implements BorrowService {
             fine.setCreatedAt(LocalDateTime.now());
         }
         borrowDetailRepository.save(detail);
-        Borrows borrows = detail.getBorrows();
+        Borrows borrows = detail.getBorrow();
         boolean allReturned = borrows.getDetails().stream().allMatch(d -> d.getReturnDate() != null);
         if (allReturned) {
             borrows.setStatus(BorrowStatus.RETURNED);
@@ -136,6 +140,7 @@ public class BorrowServiceImpl implements BorrowService {
         }
     }
 
+    @Transactional
     @Override
     public BorrowResponse returnAllBooks(Integer borrowId) {
         Borrows borrows = findById(borrowId);
