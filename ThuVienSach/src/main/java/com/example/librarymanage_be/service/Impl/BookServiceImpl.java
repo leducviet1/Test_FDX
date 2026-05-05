@@ -185,7 +185,6 @@ public class BookServiceImpl implements BookService {
                 .stream()
                 .map(BookDocument::getId)
                 .toList();
-
         Specification<Book> spec = Specification.where(idIn(ids));
 
 //        Specification<Book> spec = (root, query, criteriaBuilder) -> criteriaBuilder.conjunction();
