@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -21,6 +22,7 @@ public class BookController {
     private final BookService bookService;
     private final ExcelExportService excelExportService;
 
+    @PreAuthorize("hasAuthority('BOOK_VIEW')")
     @GetMapping
     public Page<BookResponse> getBooks(@RequestParam(defaultValue = "0") int page,
                                        @RequestParam(defaultValue = "5") int size) {
@@ -44,6 +46,7 @@ public class BookController {
         return bookService.searchBooks(keyword, categoryName, authorName, pageable);
     }
 
+    @PreAuthorize("hasAuthority('BOOK_CREATE')")
     @PostMapping("/create")
     public BookResponse create(@Valid @RequestBody BookRequest bookRequest) {
         return bookService.create(bookRequest);
@@ -54,6 +57,7 @@ public class BookController {
         return bookService.update(id, bookRequest);
     }
 
+    @PreAuthorize("hasAuthority('BOOK_DELETE')")
     @DeleteMapping("delete/{id}")
     public void delete(@PathVariable Integer id) {
         bookService.delete(id);
