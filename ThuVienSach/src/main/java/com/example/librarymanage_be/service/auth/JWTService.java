@@ -16,9 +16,9 @@ import java.util.function.Function;
 
 @Service
 public class JWTService {
-    @Value("${spring.jwt.secret}")
+    @Value("${jwt.secret}")
     private String secretKey;
-    @Value("${spring.jwt.expiration}")
+    @Value("${jwt.expiration}")
     private long jwtExpiration;
 
     //Tạo Access token

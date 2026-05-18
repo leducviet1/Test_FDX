@@ -1,6 +1,5 @@
 package com.example.librarymanage_be.service.Impl;
 
-import com.example.librarymanage_be.properties.MinioProperties;
 import com.example.librarymanage_be.service.MinioService;
 
 import io.minio.GetPresignedObjectUrlArgs;
