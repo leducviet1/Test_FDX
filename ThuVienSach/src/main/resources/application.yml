@@ -7,7 +7,7 @@ spring:
   elasticsearch:
     uris: http://localhost:9200
 
-  minio:
+minio:
     url: http://localhost:9000
     access-key: admin
     secret-key: 12345678
@@ -15,7 +15,6 @@ spring:
       avatar: avatars
       report: reports
 
-  jwt:
+jwt:
     secret: 4lZFtDImGPq0LwFN40w4heElY+KIYqZtY1zraGjGfkg=
-    expiration: 600000
-      
+    expiration: 3600000
