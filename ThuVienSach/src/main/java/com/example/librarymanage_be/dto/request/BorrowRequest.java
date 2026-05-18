@@ -7,5 +7,4 @@ import java.util.List;
 public class BorrowRequest {
     private Integer userId;
     private List<BorrowItemRequest> items;
-
 }
