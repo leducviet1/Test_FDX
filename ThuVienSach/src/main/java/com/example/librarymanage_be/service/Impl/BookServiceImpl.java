@@ -8,6 +8,7 @@ import com.example.librarymanage_be.entity.Author;
 import com.example.librarymanage_be.entity.Book;
 import com.example.librarymanage_be.entity.BookAuthor;
 import com.example.librarymanage_be.enums.BookStatus;
+import com.example.librarymanage_be.exception.BadRequestException;
 import com.example.librarymanage_be.mapper.BookMapper;
 import com.example.librarymanage_be.repo.*;
 import com.example.librarymanage_be.service.AuthorService;
@@ -86,7 +87,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public Page<BookResponse> getBooks(Pageable pageable) {
         log.info("[BOOK] Getting books with page={},size={}", pageable.getPageNumber(), pageable.getPageSize());
-        Page<Book> books = bookRepository.findAll(pageable);
+        Page<Book> books = bookRepository.findAllByBookStatusNot(BookStatus.INACTIVE,pageable);
         log.info("[BOOK] Found {} publishers", books.getTotalElements());
         return books.map(bookMapper::toResponse);
     }
@@ -158,9 +159,14 @@ public class BookServiceImpl implements BookService {
     @CacheEvict(value = "books", key = "#bookId")
     public void delete(Integer bookId) {
         Book bookExisted = EntityUtils.getOrThrow(bookRepository.findById(bookId), "Book not found");
-        bookRepository.delete(bookExisted);
+        //Kiểm tra sách có đang cho mượn hay không
+        if(bookExisted.getTotalQuantity() > bookExisted.getAvailableQuantity()) {
+            throw new BadRequestException("Book is currently being borrowed");
+        }
+        bookExisted.setBookStatus(BookStatus.INACTIVE);
+        bookRepository.save(bookExisted);
         elasticSearchBookService.deleteById(bookId);
-        log.info("[BOOK] Deleted book with id={}", bookId);
+        log.info("[BOOK]Soft Deleted book with id={}", bookId);
     }
 
     @Override

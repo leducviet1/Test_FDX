@@ -4,6 +4,7 @@ import com.example.librarymanage_be.enums.BorrowDetailStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -25,6 +26,11 @@ public class BorrowDetail {
 
     private Integer quantity;
     private String note;
+
+    //snapshot
+    private String bookTitleSnapshot;
+    private BigDecimal bookPriceSnapshot;
+
 
     @Enumerated(EnumType.STRING)
     private BorrowDetailStatus status;
