@@ -1,5 +1,6 @@
 package com.example.librarymanage_be.service.auth;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,21 +32,32 @@ public class JWTFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
+        try {
+            String token = authHeader.substring(7);
+            String email = jwtService.extractEmail(token);
+            if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+                System.out.println(userDetails.getAuthorities());
 
-        String token = authHeader.substring(7);
-        String email = jwtService.extractEmail(token);
-
-        if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-
-            //Validate token
-            if (jwtService.validateToken(token, userDetails,"access")) {
-                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                authenticationToken.setDetails(new WebAuthenticationDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken); //lưu user hiện tại
+                //Validate token
+                if (jwtService.validateToken(token, userDetails, "access")) {
+                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                    authenticationToken.setDetails(new WebAuthenticationDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authenticationToken); //lưu user hiện tại
+                }
             }
+            filterChain.doFilter(request, response);
+
+            // xử lý authenticate
+        } catch (ExpiredJwtException e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.getWriter().write("""
+                        {
+                          "message":"JWT token expired"
+                        }
+                    """);
         }
-        filterChain.doFilter(request, response);
 
     }
 }
